@@ -10,8 +10,8 @@
  */
 #include "Serial.hpp"
 //>>---------------------- Log control
-#define LOG_MODULE_NAME serial
-#define LOG_MODULE_LEVEL (3)
+#define LOG_MODULE_NAME     sdev
+#define LOG_MODULE_LEVEL    (3)
 #include "libs/debug/log_libs.h"
 //<<----------------------
 
