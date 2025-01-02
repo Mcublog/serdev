@@ -102,4 +102,12 @@ void TtyDevice::register_irq(ios_irq_handler_t irq)
 {
     m_irq_handler = irq;
 }
+
+uint8_t TtyDevice::read(bool *succsess)
+{
+    uint8_t byte = 0;
+    long size = ::read(m_io_stream, &byte, 1);
+    *succsess = size > 0;
+    return byte;
+}
 //<<----------------------

@@ -1,23 +1,23 @@
 
-#ifndef TTYDEVICE_H
-#define TTYDEVICE_H
+#ifndef SOCKETDEVICE_H
+#define SOCKETDEVICE_H
 
 #include <pthread.h>
 
 #include "../Serial.hpp"
 
-class TtyDevice final: public Serial
+class USocketServerDevice final: public Serial
 {
   private:
-    const char *m_portname = "/dev/ttyS11";
+    const char *m_socket_name = "socket_name";
     void *(*m_read_thread)(void *) = nullptr;
 
     pthread_t m_thread_id;
-
-    int m_io_stream;
+    int m_server_stream = -1;
+    int m_client_stream = -1;
 
   public:
-    TtyDevice(const char *portname, void *(*read_thread)(void *));
+    USocketServerDevice(const char *socketname, void *(*read_thread)(void *));
 
     bool init(ios_ctl_t *ctl);
     bool helth(){return true;};
@@ -28,4 +28,4 @@ class TtyDevice final: public Serial
     void register_irq(ios_irq_handler_t irq);
 };
 
-#endif // TTYDEVICE_H
+#endif // SOCKETDEVICE_H
