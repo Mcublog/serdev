@@ -1,0 +1,3 @@
+[submodule "libs/debug"]
+	path = libs/debug
+	url = git@github.com:Mcublog/debug.git
