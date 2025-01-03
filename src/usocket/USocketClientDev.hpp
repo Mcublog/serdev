@@ -1,23 +1,22 @@
 
-#ifndef SOCKETSERVERDEVICE_H
-#define SOCKETSERVERDEVICE_H
+#ifndef SOCKETCLIENTDEVICE_H
+#define SOCKETCLIENTDEVICE_H
 
 #include <pthread.h>
 
 #include "../Serial.hpp"
 
-class USocketServerDevice final: public Serial
+class USocketClientDevice final: public Serial
 {
   private:
     const char *m_socket_name = "socket_name";
     void *(*m_read_thread)(void *) = nullptr;
 
     pthread_t m_thread_id;
-    int m_server_stream = -1;
     int m_client_stream = -1;
 
   public:
-    USocketServerDevice(const char *socketname, void *(*read_thread)(void *));
+    USocketClientDevice(const char *socketname, void *(*read_thread)(void *));
 
     bool init(ios_ctl_t *ctl);
     bool helth();
@@ -28,4 +27,4 @@ class USocketServerDevice final: public Serial
     void register_irq(ios_irq_handler_t irq);
 };
 
-#endif // SOCKETSERVERDEVICE_H
+#endif // SOCKETCLIENTDEVICE_H
