@@ -1,0 +1,23 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "doxdocgen.generic.authorEmail": "viacheslav@mcublog.ru",
+    "doxdocgen.generic.authorName": "Viacheslav",
+    "doxdocgen.file.copyrightTag": [
+        "@copyright Mcublog Copyright (c) {year}"
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: Microsoft, ColumnLimit: 90, IndentWidth: 4}",
+    // ColumnLimit: 90,
+    "diffEditor.ignoreTrimWhitespace": true,
+    "files.associations": {
+        "client_phone_handling.h": "c",
+        "segger_rtt.h": "c",
+        "typeinfo": "c",
+        "cstddef": "cpp"
+    },
+    "task.autoDetect":"off",
+    "cmake.generator": "Unix Makefiles",
+    "cmake.configureOnEdit": true,
+    "cortex-debug.variableUseNaturalFormat": false
+
+    // "cmake.buildTask": true
+}
