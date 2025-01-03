@@ -8,8 +8,7 @@
  * @copyright Viacheslav mcublog (c) 2025
  *
  */
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 #include <sys/socket.h>
@@ -83,12 +82,13 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
     LOG_ERROR("Waiting for connection....");
     unsigned int sock_len = 0;
     struct sockaddr_un remote = {};
-    m_client_stream = accept(m_client_stream, (struct sockaddr *)&remote, &sock_len);
+    m_client_stream = accept(m_server_stream, (struct sockaddr *)&remote, &sock_len);
     if (m_client_stream == -1)
     {
         LOG_ERROR("Error on accept() call");
         exit(1);
     }
+
     LOG_INFO("Server connected");
 
     pthread_create(&m_thread_id, NULL, m_read_thread, NULL);
@@ -109,8 +109,8 @@ bool USocketServerDevice::write(uint8_t *data, uint32_t size)
     LOG_DEBUG("Write: %d", size);
     if (m_client_stream == (-1))
     {
-        LOG_ERROR("io stream");
-        return false;
+        LOG_ERROR("connection lost");
+        exit(1);
     }
     ssize_t writed_count = ::send(m_client_stream, data, size, 0);
     return writed_count == size;
@@ -131,12 +131,25 @@ uint8_t USocketServerDevice::read(bool *succsess)
     *succsess = false;
     if (m_client_stream == (-1))
     {
-        LOG_ERROR("io stream");
-        return 0;
+        LOG_ERROR("connection lost");
+        exit(1);
     }
     uint8_t byte = 0;
     long size = ::recv(m_client_stream, &byte, 1, 0);
     *succsess = size > 0;
     return byte;
+}
+
+/**
+ * @brief If we are here, the connection is lost
+ *
+ * @return true
+ * @return false
+ */
+bool USocketServerDevice::helth()
+{
+    close(m_client_stream);
+    close(m_server_stream);
+    return false;
 }
 //<<----------------------

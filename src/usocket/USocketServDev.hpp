@@ -20,7 +20,7 @@ class USocketServerDevice final: public Serial
     USocketServerDevice(const char *socketname, void *(*read_thread)(void *));
 
     bool init(ios_ctl_t *ctl);
-    bool helth(){return true;};
+    bool helth();
     bool write(uint8_t *data, uint32_t size);
     uint8_t read(bool *succsess);
 
