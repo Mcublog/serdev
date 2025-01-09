@@ -73,6 +73,12 @@ bool TtyDevice::init(ios_ctl_t *ctl)
     return true;
 }
 
+bool TtyDevice::init(const char *portname, ios_ctl_t *ctl)
+{
+    m_portname = portname;
+    return init(ctl);
+}
+
 /**
  * @brief Write to file
  *

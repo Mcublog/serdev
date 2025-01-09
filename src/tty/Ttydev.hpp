@@ -20,6 +20,8 @@ class TtyDevice final: public Serial
     TtyDevice(const char *portname, void *(*read_thread)(void *));
 
     bool init(ios_ctl_t *ctl);
+    bool init(const char *portname, ios_ctl_t *ctl);
+
     bool helth(){return true;};
     bool write(uint8_t *data, uint32_t size);
     uint8_t read(bool *succsess);
