@@ -32,7 +32,7 @@
 //>>---------------------- Exported function
 USocketClientDevice::USocketClientDevice(const char *socketname, void *(*read_thread)(void *))
 {
-    m_socket_name = socketname;
+    m_portname = socketname;
     m_read_thread = read_thread;
 }
 
@@ -47,7 +47,7 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    LOG_INFO("Usage: %s", m_socket_name);
+    LOG_INFO("Usage: %s", m_portname);
     m_client_stream = socket(AF_UNIX, SOCK_STREAM, 0);
     if (m_client_stream == -1)
     {
@@ -64,7 +64,7 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
     LOG_INFO("Client: Trying to connect...");
     struct sockaddr_un remote = {};
     remote.sun_family = AF_UNIX;
-    strcpy(remote.sun_path, m_socket_name);
+    strcpy(remote.sun_path, m_portname);
 
     if (connect(m_client_stream, (struct sockaddr *)&remote, sizeof(remote)) == -1)
     {

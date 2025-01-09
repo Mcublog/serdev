@@ -9,7 +9,7 @@
 class USocketClientDevice final: public Serial
 {
   private:
-    const char *m_socket_name = "socket_name";
+    const char *m_portname;
     void *(*m_read_thread)(void *) = nullptr;
 
     pthread_t m_thread_id;
@@ -19,11 +19,16 @@ class USocketClientDevice final: public Serial
     USocketClientDevice(const char *socketname, void *(*read_thread)(void *));
 
     bool init(ios_ctl_t *ctl);
+    bool init(const char *portname, ios_ctl_t *ctl)
+    {
+      m_portname = portname;
+      return init(ctl);
+    }
+
     bool helth();
     bool write(const uint8_t *data, uint32_t size);
     uint8_t read(bool *succsess);
 
-  // Only emulation extend funtion
     void register_irq(ios_irq_handler_t irq);
 };
 

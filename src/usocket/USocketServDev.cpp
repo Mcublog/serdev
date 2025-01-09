@@ -32,10 +32,15 @@
 //>>---------------------- Exported function
 USocketServerDevice::USocketServerDevice(const char *socketname, void *(*read_thread)(void *))
 {
-    m_socket_name = socketname;
+    m_portname = socketname;
     m_read_thread = read_thread;
 }
 
+bool USocketServerDevice::init(const char *portname, ios_ctl_t *ctl)
+{
+    m_portname = portname;
+    return init(ctl);
+}
 /**
  * @brief
  *
@@ -47,7 +52,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    LOG_INFO("Usage: %s", m_socket_name);
+    LOG_INFO("Usage: %s", m_portname);
     m_server_stream = socket(AF_UNIX, SOCK_STREAM, 0);
     if (m_server_stream == -1)
     {
@@ -63,7 +68,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 
     struct sockaddr_un local = {};
     local.sun_family = AF_UNIX;
-    strcpy(local.sun_path, m_socket_name);
+    strcpy(local.sun_path, m_portname);
     unlink(local.sun_path);
 
     int err = bind(m_server_stream, (struct sockaddr *)&local, sizeof(local));
