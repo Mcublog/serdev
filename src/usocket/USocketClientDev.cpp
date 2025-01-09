@@ -95,7 +95,7 @@ bool USocketClientDevice::write(const uint8_t *data, uint32_t size)
         LOG_ERROR("connection lost");
         exit(1);
     }
-    ssize_t writed_count = ::send(m_client_stream, data, size, 0);
+    ssize_t writed_count = ::write(m_client_stream, data, size);
     return writed_count == size;
 }
 
@@ -118,7 +118,7 @@ uint8_t USocketClientDevice::read(bool *succsess)
         exit(1);
     }
     uint8_t byte = 0;
-    long size = ::recv(m_client_stream, &byte, 1, 0);
+    long size = ::read(m_client_stream, &byte, 1);
     *succsess = size > 0;
     return byte;
 }
