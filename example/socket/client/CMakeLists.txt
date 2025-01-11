@@ -17,6 +17,8 @@ file(GLOB_RECURSE SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${PROJECT_SOURCE_DIR}/src/Serial.cpp
     ${PROJECT_SOURCE_DIR}/src/usocket/USocketClientDev.cpp
+    ${PROJECT_SOURCE_DIR}/src/utils/*.c
+    ${PROJECT_SOURCE_DIR}/src/utils/*.cpp
 )
 
 # Buid TEST_TARGET target

@@ -16,6 +16,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "../utils/sockets.h"
 #include "USocketClientDev.hpp"
 //>>---------------------- Log control
 #define LOG_MODULE_NAME     usockclt
@@ -34,6 +35,20 @@ USocketClientDevice::USocketClientDevice(const char *socketname, void *(*read_th
 {
     m_portname = socketname;
     m_read_thread = read_thread;
+}
+
+/**
+ * @brief
+ *
+ * @param portname
+ * @param ctl
+ * @return true
+ * @return false
+ */
+bool USocketClientDevice::init(const char *portname, ios_ctl_t *ctl)
+{
+    m_portname = portname;
+    return init(ctl);
 }
 
 /**
@@ -62,11 +77,8 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
     }
 
     LOG_INFO("Client: Trying to connect...");
-    struct sockaddr_un remote = {};
-    remote.sun_family = AF_UNIX;
-    strcpy(remote.sun_path, m_portname);
 
-    if (connect(m_client_stream, (struct sockaddr *)&remote, sizeof(remote)) == -1)
+    if (socket_connect(m_client_stream, m_portname, AF_UNIX) == -1)
     {
         LOG_ERROR("Client: Error on connect call");
         exit(1);

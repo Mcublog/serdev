@@ -87,7 +87,7 @@ bool TtyDevice::init(const char *portname, ios_ctl_t *ctl)
  * @return true
  * @return false
  */
-bool TtyDevice::write(uint8_t *data, uint32_t size)
+bool TtyDevice::write(const uint8_t *data, uint32_t size)
 {
     LOG_DEBUG("Write: %d", size);
     if (m_io_stream == (-1))
