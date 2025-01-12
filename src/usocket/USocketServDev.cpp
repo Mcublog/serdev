@@ -53,8 +53,10 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    LOG_INFO("Usage: %s", m_portname);
-    m_server_stream = socket(AF_UNIX, SOCK_STREAM, 0);
+    unsigned short family = 0;
+    m_server_stream = socket_open(m_portname, &family);
+
+    LOG_INFO("Usage: %s with family: %d", m_portname, family);
     if (m_server_stream == -1)
     {
         LOG_ERROR("Error on socket() call");
@@ -67,7 +69,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
         return false;
     }
 
-    int err = socket_bind(m_server_stream, m_portname, AF_UNIX);
+    int err = socket_bind(m_server_stream, m_portname, family);
     if (err != 0)
     {
         LOG_ERROR("Error on binding socket");
@@ -82,7 +84,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 
     LOG_ERROR("Waiting for connection....");
 
-    m_client_stream = socket_accept(m_server_stream, AF_UNIX);
+    m_client_stream = socket_accept(m_server_stream, family);
     if (m_client_stream == -1)
     {
         LOG_ERROR("Error on accept() call");

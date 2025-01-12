@@ -133,6 +133,20 @@ bool is_unix_addr(const char *portname)
     return true;
 }
 
+int socket_open(const char *portname, unsigned short *family)
+{
+    int port;
+    in_addr_t addres;
+
+    *family = AF_INET;
+    if (parse_inet_addr(portname, &addres, &port) == -1)
+    {
+        LOG_DEBUG("using unix family");
+        *family = AF_UNIX;
+    }
+    return socket(*family, SOCK_STREAM, 0);
+}
+
 /**
  * @brief
  *

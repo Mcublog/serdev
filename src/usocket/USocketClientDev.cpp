@@ -62,8 +62,11 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    LOG_INFO("Usage: %s", m_portname);
-    m_client_stream = socket(AF_UNIX, SOCK_STREAM, 0);
+    unsigned short family = 0;
+    m_client_stream = socket_open(m_portname, &family);
+
+    LOG_INFO("Usage: %s with family: %d", m_portname, family);
+
     if (m_client_stream == -1)
     {
         LOG_ERROR("Error on socket() call");
@@ -78,7 +81,7 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
 
     LOG_INFO("Client: Trying to connect...");
 
-    if (socket_connect(m_client_stream, m_portname, AF_UNIX) == -1)
+    if (socket_connect(m_client_stream, m_portname, family) == -1)
     {
         LOG_ERROR("Client: Error on connect call");
         exit(1);
