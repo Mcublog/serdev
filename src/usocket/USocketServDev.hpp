@@ -19,14 +19,14 @@ class USocketServerDevice final: public Serial
   public:
     USocketServerDevice(const char *socketname, void *(*read_thread)(void *));
 
-    bool init(ios_ctl_t *ctl);
-    bool init(const char *portname, ios_ctl_t *ctl);
+    bool init(ios_ctl_t *ctl) override;
+    bool init(const char *portname, ios_ctl_t *ctl) override;
 
-    bool helth();
-    bool write(const uint8_t *data, uint32_t size);
-    uint8_t read(bool *succsess);
+    bool helth() override;
+    bool write(const uint8_t *data, uint32_t size) override;
+    uint8_t read(bool *succsess) override;
 
-    void register_irq(ios_irq_handler_t irq);
+    void register_irq(ios_irq_handler_t irq) override;
 };
 
 #endif // SOCKETSERVERDEVICE_H

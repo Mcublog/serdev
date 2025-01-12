@@ -21,7 +21,7 @@ class Serial
     virtual bool init(const char *portname, ios_ctl_t *ctl) = 0;
 
     virtual bool helth() = 0;
-    virtual bool write(const uint8_t *data, uint32_t size) { return false; };
+    virtual bool write(const uint8_t *data, uint32_t size) = 0;
     virtual uint8_t read(bool *succsess) = 0;
 
     uint32_t irq_handler(ios_chunk_t *chunk);

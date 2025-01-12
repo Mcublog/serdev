@@ -16,6 +16,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "../utils/sockets.h"
 #include "USocketServDev.hpp"
 //>>---------------------- Log control
 #define LOG_MODULE_NAME     usocksrv
@@ -66,12 +67,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
         return false;
     }
 
-    struct sockaddr_un local = {};
-    local.sun_family = AF_UNIX;
-    strcpy(local.sun_path, m_portname);
-    unlink(local.sun_path);
-
-    int err = bind(m_server_stream, (struct sockaddr *)&local, sizeof(local));
+    int err = socket_bind(m_server_stream, m_portname, AF_UNIX);
     if (err != 0)
     {
         LOG_ERROR("Error on binding socket");
@@ -85,9 +81,8 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
     }
 
     LOG_ERROR("Waiting for connection....");
-    unsigned int sock_len = 0;
-    struct sockaddr_un remote = {};
-    m_client_stream = accept(m_server_stream, (struct sockaddr *)&remote, &sock_len);
+
+    m_client_stream = socket_accept(m_server_stream);
     if (m_client_stream == -1)
     {
         LOG_ERROR("Error on accept() call");
