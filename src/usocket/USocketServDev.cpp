@@ -82,7 +82,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 
     LOG_ERROR("Waiting for connection....");
 
-    m_client_stream = socket_accept(m_server_stream);
+    m_client_stream = socket_accept(m_server_stream, AF_UNIX);
     if (m_client_stream == -1)
     {
         LOG_ERROR("Error on accept() call");
