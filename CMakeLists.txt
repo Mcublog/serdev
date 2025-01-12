@@ -21,6 +21,6 @@ set_property(GLOBAL PROPERTY RULE_MESSAGES OFF)
 
 # endregion
 
-project(SerialDevice VERSION 0.0.1 LANGUAGES C CXX ASM)
+project(SerialDevice VERSION 0.0.3 LANGUAGES C CXX ASM)
 
 add_subdirectory(example)
