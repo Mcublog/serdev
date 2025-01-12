@@ -44,11 +44,11 @@ bool is_unix_addr(const char *portname)
  * @param fd
  * @return int
  */
-int socket_bind(int fd, const char *portname, unsigned short famaly)
+int socket_bind(int fd, const char *portname, unsigned short family)
 {
     struct sockaddr_un local = {};
 
-    local.sun_family = AF_UNIX;
+    local.sun_family = family;
     strcpy(local.sun_path, portname);
     unlink(local.sun_path);
 
@@ -63,12 +63,26 @@ int socket_bind(int fd, const char *portname, unsigned short famaly)
  * @param famaly
  * @return int
  */
-int socket_connect(int fd, const char *portname, unsigned short famaly)
+int socket_connect(int fd, const char *portname, unsigned short family)
 {
     struct sockaddr_un remote = {};
 
-    remote.sun_family = AF_UNIX;
+    remote.sun_family = family;
     strcpy(remote.sun_path, portname);
 
     return connect(fd, (struct sockaddr *)&remote, sizeof(remote));
+}
+
+/**
+ * @brief
+ *
+ * @param fd
+ * @return int
+ */
+int socket_accept(int fd)
+{
+    unsigned int sock_len = 0;
+    struct sockaddr_un remote = {};
+
+    return accept(fd, (struct sockaddr *)&remote, &sock_len);
 }
