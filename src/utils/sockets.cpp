@@ -26,7 +26,7 @@
 static int parse_inet_addr(const char* portname, in_addr_t *addr, int *port)
 {
     char address[256] = {};
-    if (sscanf(portname, "%s:%d", address, port) != 2)
+    if (sscanf(portname, "%255[^:]:%d", address, port) != 2)
     {
         LOG_ERROR("can't parse %s to address:port", portname);
         return -1;
