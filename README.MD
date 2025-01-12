@@ -2,5 +2,6 @@
 
 Common interface for serial devices:
 
-* POSIX /dev/tty*
-* UNIX socket
+* /dev/tty*
+* UNIX socket (SOCK_STREAM)
+* INET socet (SOCK_STREAM)
