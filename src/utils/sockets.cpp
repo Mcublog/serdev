@@ -201,3 +201,16 @@ bool is_localhost_address_string(const char *portname)
 {
     return (std::string_view{portname}.find("localhost") != std::string_view::npos);
 }
+
+
+/**
+ * @brief Is '/dev/tty' in string portname
+ *
+ * @param portname
+ * @return true
+ * @return false
+ */
+bool is_serial_dev(const char *portname)
+{
+    return (std::string_view{portname}.find("/dev/tty") != std::string_view::npos);
+}
