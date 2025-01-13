@@ -28,6 +28,35 @@
 //<<----------------------
 
 //>>---------------------- Local definitions
+void USocketClientDevice::connect()
+{
+    unsigned short family = 0;
+    m_client_stream = socket_open(m_portname, &family);
+
+    LOG_INFO("Usage: %s with family: %d", m_portname, family);
+
+    if (m_client_stream == -1)
+    {
+        LOG_ERROR("Error on socket() call");
+        exit(1);
+    }
+
+    if (m_read_thread == nullptr)
+    {
+        LOG_ERROR("m_read_thread == nullptr");
+        exit(1);
+    }
+
+    LOG_INFO("Client: Trying to connect...");
+
+    if (socket_connect(m_client_stream, m_portname, family) == -1)
+    {
+        LOG_ERROR("Client: Error on connect call");
+        exit(1);
+    }
+
+    LOG_INFO("Client: Connected");
+}
 //<<----------------------
 
 //>>---------------------- Exported function
@@ -62,32 +91,7 @@ bool USocketClientDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    unsigned short family = 0;
-    m_client_stream = socket_open(m_portname, &family);
-
-    LOG_INFO("Usage: %s with family: %d", m_portname, family);
-
-    if (m_client_stream == -1)
-    {
-        LOG_ERROR("Error on socket() call");
-        exit(1);
-    }
-
-    if (m_read_thread == nullptr)
-    {
-        LOG_ERROR("m_read_thread == nullptr");
-        exit(1);
-    }
-
-    LOG_INFO("Client: Trying to connect...");
-
-    if (socket_connect(m_client_stream, m_portname, family) == -1)
-    {
-        LOG_ERROR("Client: Error on connect call");
-        exit(1);
-    }
-
-    LOG_INFO("Client: Connected");
+    connect();
 
     pthread_create(&m_thread_id, NULL, m_read_thread, NULL);
 
@@ -146,7 +150,10 @@ uint8_t USocketClientDevice::read(bool *succsess)
  */
 bool USocketClientDevice::helth()
 {
+    //TODO: need redising
     close(m_client_stream);
+    m_client_stream = -1;
+    connect();
     return false;
 }
 //<<----------------------

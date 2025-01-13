@@ -28,6 +28,48 @@
 //<<----------------------
 
 //>>---------------------- Local definitions
+void USocketServerDevice::connect()
+{
+    unsigned short family = 0;
+    m_server_stream = socket_open(m_portname, &family);
+
+    LOG_INFO("Usage: %s with family: %d", m_portname, family);
+    if (m_server_stream == -1)
+    {
+        LOG_ERROR("Error on socket() call");
+        exit(1);
+    }
+
+    if (m_read_thread == nullptr)
+    {
+        LOG_ERROR("m_read_thread == nullptr");
+        exit(1);
+    }
+
+    int err = socket_bind(m_server_stream, m_portname, family);
+    if (err != 0)
+    {
+        LOG_ERROR("Error on binding socket");
+        exit(1);
+    }
+
+    if (listen(m_server_stream, 1) != 0)
+    {
+        LOG_ERROR("Error on listen call");
+        exit(1);
+    }
+
+    LOG_INFO("Waiting for connection....");
+
+    m_client_stream = socket_accept(m_server_stream, family);
+    if (m_client_stream == -1)
+    {
+        LOG_ERROR("Error on accept() call");
+        exit(1);
+    }
+
+    LOG_INFO("Server connected");
+}
 //<<----------------------
 
 //>>---------------------- Exported function
@@ -53,45 +95,7 @@ bool USocketServerDevice::init(ios_ctl_t *ctl)
 {
     Serial::init(ctl);
 
-    unsigned short family = 0;
-    m_server_stream = socket_open(m_portname, &family);
-
-    LOG_INFO("Usage: %s with family: %d", m_portname, family);
-    if (m_server_stream == -1)
-    {
-        LOG_ERROR("Error on socket() call");
-        exit(1);
-    }
-
-    if (m_read_thread == nullptr)
-    {
-        LOG_ERROR("m_read_thread == nullptr");
-        return false;
-    }
-
-    int err = socket_bind(m_server_stream, m_portname, family);
-    if (err != 0)
-    {
-        LOG_ERROR("Error on binding socket");
-        exit(1);
-    }
-
-    if (listen(m_server_stream, 1) != 0)
-    {
-        LOG_ERROR("Error on listen call");
-        exit(1);
-    }
-
-    LOG_ERROR("Waiting for connection....");
-
-    m_client_stream = socket_accept(m_server_stream, family);
-    if (m_client_stream == -1)
-    {
-        LOG_ERROR("Error on accept() call");
-        exit(1);
-    }
-
-    LOG_INFO("Server connected");
+    connect();
 
     pthread_create(&m_thread_id, NULL, m_read_thread, NULL);
 
@@ -150,8 +154,12 @@ uint8_t USocketServerDevice::read(bool *succsess)
  */
 bool USocketServerDevice::helth()
 {
+    //TODO: need redising
     close(m_client_stream);
+    m_client_stream = (-1);
     close(m_server_stream);
+    m_server_stream = (-1);
+    connect();
     return false;
 }
 //<<----------------------

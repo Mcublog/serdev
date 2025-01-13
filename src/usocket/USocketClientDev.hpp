@@ -2,6 +2,7 @@
 #ifndef SOCKETCLIENTDEVICE_H
 #define SOCKETCLIENTDEVICE_H
 
+#include <atomic>
 #include <pthread.h>
 
 #include "../Serial.hpp"
@@ -13,7 +14,9 @@ class USocketClientDevice final: public Serial
     void *(*m_read_thread)(void *) = nullptr;
 
     pthread_t m_thread_id;
-    int m_client_stream = -1;
+    std::atomic<int> m_client_stream = -1;
+
+    void connect();
 
   public:
     USocketClientDevice(const char *socketname, void *(*read_thread)(void *));
