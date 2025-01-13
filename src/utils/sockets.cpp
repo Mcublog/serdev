@@ -189,3 +189,15 @@ int socket_accept(int fd, unsigned short family)
         return unix_socket_accept(fd);
     return inet_socket_accept(fd);
 }
+
+/**
+ * @brief Is 'localhost' in string portname
+ *
+ * @param portname
+ * @return true
+ * @return false
+ */
+bool is_localhost_address_string(const char *portname)
+{
+    return (std::string_view{portname}.find("localhost") != std::string_view::npos);
+}
